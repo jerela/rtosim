@@ -24,7 +24,6 @@ using rtosim::GeneralisedCoordinatesFrame;
 
 #include <chrono>
 #include <thread>
-#include <chrono>
 #include <string>
 using std::string;
 #include <vector>
@@ -33,9 +32,9 @@ using std::vector;
 using std::cout;
 using std::endl;
 
-#include <OpenSim/OpenSim.h>
-#include <OpenSim/Simulation/CoordinateReference.h>
-#include <OpenSim/Simulation/InverseKinematicsSolver.h>
+#include <OpenSim/OpenSim.h> // löytyy sekä 3.3 että 4.1
+#include <OpenSim/Simulation/CoordinateReference.h> // löytyy
+#include <OpenSim/Simulation/InverseKinematicsSolver.h> // löytyy
 #include <memory>
 using std::unique_ptr;
 #include <limits>
@@ -60,8 +59,8 @@ namespace rtosim{
         sovlerAccuracy_(solverAccuracy),
         contraintWeight_(contraintWeight) {
 
-        OpenSim::Array<std::string> markerNamesArray, coordinateNamesArray;
-        const_cast<OpenSim::MarkerSet&>(model_.getMarkerSet()).getMarkerNames(markerNamesArray);
+        OpenSim::Array<std::string> markerNamesArray, coordinateNamesArray; // löytyy sekä 3.3 että 4.1
+        const_cast<OpenSim::MarkerSet&>(model_.getMarkerSet()).getMarkerNames(markerNamesArray); // löytyy
         rtosim::ArrayConverter::toStdVector(markerNamesArray, markerNames_);
         nMarkers_ = markerNames_.size();
 
@@ -76,7 +75,7 @@ namespace rtosim{
     }
 
 
-	void IKSolverParallel::setInverseKinematicsTaskSet(const OpenSim::IKTaskSet& ikTaskSet) {
+	void IKSolverParallel::setInverseKinematicsTaskSet(const OpenSim::IKTaskSet& ikTaskSet) { // löytyy
 
 		for (size_t i(0); i < static_cast<size_t>(ikTaskSet.getSize()); ++i) {
 			std::string currentMarkerName(ikTaskSet.get(i).getName());
@@ -90,8 +89,8 @@ namespace rtosim{
     void IKSolverParallel::setInverseKinematicsTaskSet(const string& ikTaskSetFilename) {
 
         //this should be fixed
-        OpenSim::Object* p = OpenSim::Object::makeObjectFromFile(ikTaskSetFilename);
-        OpenSim::IKTaskSet ikTaskSet = *(dynamic_cast<OpenSim::IKTaskSet*>(p));
+        OpenSim::Object* p = OpenSim::Object::makeObjectFromFile(ikTaskSetFilename); // löytyy
+        OpenSim::IKTaskSet ikTaskSet = *(dynamic_cast<OpenSim::IKTaskSet*>(p)); // löytyy
         delete p;
 		setInverseKinematicsTaskSet(ikTaskSet);
     }
@@ -134,15 +133,15 @@ namespace rtosim{
         //I may need to use a raw pointer because of OpenSim..
         unique_ptr<MarkersReferenceFromQueue> markerReference(new MarkersReferenceFromQueue(inputThreadPoolJobs_, markerNames_, sortedMarkerWeights));
 
-        OpenSim::Set<OpenSim::MarkerWeight> osimMarkerWeights;
+        OpenSim::Set<OpenSim::MarkerWeight> osimMarkerWeights; // löytyy
         for (auto it : markerNames_)
-            osimMarkerWeights.adoptAndAppend(new OpenSim::MarkerWeight(it, markerWeights_[it]));
+            osimMarkerWeights.adoptAndAppend(new OpenSim::MarkerWeight(it, markerWeights_[it])); // löytyy
         markerReference->setMarkerWeightSet(osimMarkerWeights);
-        SimTK::Array_<OpenSim::CoordinateReference> coordinateRefs;
+        SimTK::Array_<OpenSim::CoordinateReference> coordinateRefs; // löytyy
 
         double previousTime(0.);
         double currentTime(0.);
-        OpenSim::InverseKinematicsSolver ikSolver(model_, *markerReference, coordinateRefs, contraintWeight_);
+        OpenSim::InverseKinematicsSolver ikSolver(model_, *markerReference, coordinateRefs, contraintWeight_); // löytyy
         ikSolver.setAccuracy(sovlerAccuracy_);
         doneWithSubscriptions_.wait();
         bool isAssembled(false);
@@ -174,8 +173,8 @@ namespace rtosim{
                     stopWatch_.init();
                     ikSolver.track(s);
                     stopWatch_.log();
-                    if (!isWithinRom(s))
-                        s = defaultState;
+                    //if (!isWithinRom(s)) // commented out by Jere (jerela) to allow IK outside of ranges of motion
+                    //    s = defaultState;
                 }
                 catch (...) {
                     s = defaultState;

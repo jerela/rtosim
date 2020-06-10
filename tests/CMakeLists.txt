@@ -1,1 +1,3 @@
 add_subdirectory(testInverseKinematics)
+add_subdirectory(test_IK_speed)
+add_subdirectory(test_IK_from_Nexus)

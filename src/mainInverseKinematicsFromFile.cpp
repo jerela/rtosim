@@ -113,17 +113,26 @@ int main(int argc, char* argv[]) {
     rtosim::FileSystem::createDirectory(resultDir);
     string stopWatchResultDir(resultDir);
 
+    cout << "116\n";
+
     //define the shared buffer
     rtosim::MarkerSetQueue markerSetQueue;
     rtosim::GeneralisedCoordinatesQueue generalisedCoordinatesQueue, filteredGeneralisedCoordinatesQueue;
+
+    cout << "122\n";
 
     //define the barriers
     rtb::Concurrency::Latch doneWithSubscriptions;
     rtb::Concurrency::Latch doneWithExecution;
 
+    cout << "128\n"; // tähän loppuu yleensä
+
     //define the filter
     auto coordNames = getCoordinateNamesFromModel(osimModelFilename);
     rtosim::GeneralisedCoordinatesStateSpace gcFilt(fc, coordNames.size());
+    cout << coordNames[1] << endl;
+    cout << coordNames[2] << endl;
+    cout << "134\n"; // tyssäys
 
     //define the threads
     //#read markers from file and save them in markerSetQueue
@@ -135,7 +144,11 @@ int main(int argc, char* argv[]) {
         trcTrialFilename,
         false);
 
+    cout << "146\n";
+
     markersFromTrc.setOutputFrequency(pushFrequency);
+
+    cout << "150\n";
 
     //read from markerSetQueue, calculate IK, and save results in generalisedCoordinatesQueue
     rtosim::QueueToInverseKinematics inverseKinematics(
@@ -145,6 +158,8 @@ int main(int argc, char* argv[]) {
         doneWithExecution,
         osimModelFilename,
         nThreads, ikTaskFilename, solverAccuracy);
+
+    cout << "161\n";
 
     //read from generalisedCoordinatesQueue, filter using gcFilt,
     //and save filtered data in filteredGeneralisedCoordinatesQueue
@@ -159,6 +174,8 @@ int main(int argc, char* argv[]) {
     doneWithExecution,
     gcFilt);
 
+    cout << "176\n"; // tänne asti päästy
+
     //read from filteredGeneralisedCoordinatesQueue and save to file
     rtosim::QueueToFileLogger<rtosim::GeneralisedCoordinatesData> filteredIkLogger(
         filteredGeneralisedCoordinatesQueue,
@@ -166,6 +183,8 @@ int main(int argc, char* argv[]) {
         doneWithExecution,
         getCoordinateNamesFromModel(osimModelFilename),
         resultDir, "filtered_ik_from_file", "sto");
+
+    cout << "186\n"; // tänne asti päästy joskus harvoin
 
     //read from generalisedCoordinatesQueue and save to file
     rtosim::QueueToFileLogger<rtosim::GeneralisedCoordinatesData> rawIkLogger(
@@ -175,10 +194,14 @@ int main(int argc, char* argv[]) {
         getCoordinateNamesFromModel(osimModelFilename),
         resultDir, "raw_ik_from_file", "sto");
 
+    cout << "196\n";
+
     //calculate the ik throughput time
     rtosim::FrameCounter<rtosim::GeneralisedCoordinatesQueue> ikFrameCounter(
         generalisedCoordinatesQueue,
         "time-ik-throughput");
+
+    cout << "203\n";
 
     //measures the time that takes every single frame to appear in two different queues
     rtosim::TimeDifference<
@@ -189,6 +212,8 @@ int main(int argc, char* argv[]) {
         doneWithSubscriptions,
         doneWithExecution);
 
+    cout << "214\n";
+
     rtosim::TimeDifference<
         rtosim::MarkerSetQueue,
         rtosim::GeneralisedCoordinatesQueue> ikTimeDifference(
@@ -197,8 +222,12 @@ int main(int argc, char* argv[]) {
         doneWithSubscriptions,
         doneWithExecution);
 
+    cout << "224\n";
+
     doneWithSubscriptions.setCount(7);
     doneWithExecution.setCount(7);
+
+    cout << "229\n"; // tänne asti päästy tosi harvoin
 
     //launch, execute, and join all the threads
     //all the multithreading is in this function
@@ -229,6 +258,8 @@ int main(int argc, char* argv[]) {
             );
     }
     //multithreaded part is over, all threads are joined
+
+    cout << "261\n"; // tänne asti päästy, ja loppuun myös
 
     auto stopWatches = inverseKinematics.getProcessingTimes();
     rtosim::StopWatch combinedSW("time-ikparallel-processing");

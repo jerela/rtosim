@@ -1,0 +1,19 @@
+WARNING: times may be wrong on Windows
+time-ikparallel-processing (thread#14792)
+frames: 72
+wall clock time
+-total:  0
+-sum:    2.41315
+-mean:   0.033516
+-std:    0.00431943
+-min:    0.0239123
+-max:    0.0440323
+-median: 0.0329978
+cpu clock time
+-total:  0
+-sum:    2.409
+-mean:   0.0334583
+-std:    0.00437778
+-min:    0.023
+-max:    0.044
+-median: 0.033

@@ -17,7 +17,7 @@
 #define rtosim_MarkerData_h
 
 #include <string>
-#include <Simbody.h>
+#include "Simbody.h"
 
 namespace rtosim{
 

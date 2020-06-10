@@ -50,7 +50,8 @@ namespace rtosim {
         virtual void computeForce(const SimTK::State& state,
             SimTK::Vector_<SimTK::SpatialVec>& bodyForces,
             SimTK::Vector& generalizedForces) const override;
-        void connectToModel(OpenSim::Model& model) override;
+        //void connectToModel(OpenSim::Model& model) override; edited by Jere
+        void connectToModel(OpenSim::Model& model);
 
     private:
         ExternalForceData getExternalForceDataFromPastValues(double time) const;

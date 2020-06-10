@@ -20,7 +20,7 @@
 #include <thread>
 #include <memory>
 #include <map>
-#include <DataStreamClient.h> //from ViconSDK
+#include "C:\Program Files\Vicon\DataStream SDK\Win64\CPP\DataStreamClient.h" //from ViconSDK
 #include "rtosim/Mapper.h"
 #include "rtb/concurrency/Concurrency.h"
 #include "rtosim/queue/MultipleExternalForcesQueue.h"

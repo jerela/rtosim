@@ -126,10 +126,14 @@ int main(int argc, char* argv[]) {
     rtb::Concurrency::Latch doneWithExecution;
     FlowControl runCondition(true);
 
+    cout << "129\n";
+
     //define the filter
     auto coordNames = getCoordinateNamesFromModel(osimModelFilename);
+    cout << "133\n";
 	auto modelMarkerNames = getMarkerNamesFromModel(osimModelFilename);
     GeneralisedCoordinatesStateSpace gcFilt(fc, coordNames.size());
+    cout << "136\n";
 
     //define the threads
     DataFromNexus dataFromNexus(
@@ -141,6 +145,8 @@ int main(int argc, char* argv[]) {
 		modelMarkerNames,
         hostname);
 
+    cout << "148\n";
+
     //read from markerSetQueue, calculate IK, and save results in generalisedCoordinatesQueue
     QueueToInverseKinematics inverseKinematics(
         markerSetQueue,
@@ -149,6 +155,8 @@ int main(int argc, char* argv[]) {
         doneWithExecution,
         osimModelFilename,
         nThreads, ikTaskFilename, solverAccuracy);
+
+    cout << "159\n";
 
     //read from generalisedCoordinatesQueue, filter using gcFilt,
     //and save filtered data in filteredGeneralisedCoordinatesQueue
@@ -162,6 +170,8 @@ int main(int argc, char* argv[]) {
     doneWithSubscriptions,
     doneWithExecution,
     gcFilt);
+
+    cout << "174\n";
 
     //corrects the value of the COP when the
     //foot is not in contact with the force plate
@@ -187,6 +197,8 @@ int main(int argc, char* argv[]) {
         doneWithExecution,
         multipleExternalForcesDataFilterStateSpace);
 
+    cout << "200\n";
+
     //read the filtered coordinates from IK and the filtered GRF,
     //calculated the ID and write the results in jointMomentQueue
     QueuesToInverseDynamics queueToInverseDynamics(
@@ -198,6 +210,8 @@ int main(int argc, char* argv[]) {
         osimModelFilename,
         externalLoadsXml);
 
+    cout << "213\n"; // eräs yleinen stoppi
+
     //read from filteredGeneralisedCoordinatesQueue and save to file
     rtosim::QueueToFileLogger<GeneralisedCoordinatesData> filteredIkLogger(
         filteredGeneralisedCoordinatesQueue,
@@ -205,6 +219,8 @@ int main(int argc, char* argv[]) {
         doneWithExecution,
         getCoordinateNamesFromModel(osimModelFilename),
         resultDir, "filtered_ik_from_nexus", "sto");
+
+    cout << "223\n";
 
     //read from generalisedCoordinatesQueue and save to file
     rtosim::QueueToFileLogger<GeneralisedCoordinatesData> rawIkLogger(
@@ -214,6 +230,8 @@ int main(int argc, char* argv[]) {
         getCoordinateNamesFromModel(osimModelFilename),
         resultDir, "raw_ik_from_nexus", "sto");
 
+    cout << "233\n"; // tänne asti päästy
+
     //read from generalisedCoordinatesQueue and save to file
     rtosim::QueueToFileLogger<ExternalTorquesData> idLogger(
         jointMomentsQueue,
@@ -222,16 +240,21 @@ int main(int argc, char* argv[]) {
         getCoordinateNamesFromModel(osimModelFilename),
         resultDir, "id_from_nexus", "sto");
 
+    cout << "243\n";
+
     //read the frames from generalisedCoordinatesQueue and calculates some stats
     rtosim::FrameCounter<GeneralisedCoordinatesQueue> ikFrameCounter(
         generalisedCoordinatesQueue,
         "time-ik-throughput");
+
+    cout << "250\n";
 
     //read the frames from generalisedCoordinatesQueue and calculates some stats
     rtosim::FrameCounter<ExternalTorquesQueue> idFrameCounter(
         jointMomentsQueue,
         "time-id-throughput");
 
+    cout << "257\n";
 
     //measures the time that takes every single frame to appear in two different queues
     rtosim::TimeDifference<
@@ -274,9 +297,12 @@ int main(int argc, char* argv[]) {
         runCondition.setRunCondition(false);
     });
 
+    cout << "300\n";
 
     doneWithSubscriptions.setCount(13);
     doneWithExecution.setCount(13);
+
+    cout << "305\n"; // tänne asti päästy
 
     //launch, execute, and join all the threads
     //all the multithreading is in this function
@@ -324,8 +350,12 @@ int main(int argc, char* argv[]) {
     }
     //multithreaded part is over, all threads are joined
 
+    cout << "353\n";
+
     //get execution time infos
     auto stopWatches = inverseKinematics.getProcessingTimes();
+
+    cout << "358\n";
 
     rtosim::StopWatch combinedSW("time-ikparallel-processing");
     for (auto& s : stopWatches)

@@ -1,0 +1,70 @@
+116
+122
+128
+Updating Model file from 20303 to latest format...
+Loaded model subject01 from file subject01_simbody.osim
+Couldn't find file 'femur.vtp'.
+Couldn't find file 'tibia.vtp'.
+Couldn't find file 'l_femur.vtp'.
+Couldn't find file 'l_tibia.vtp'.
+ControllerSet 'Controllers' was renamed and is being reset to 'controllerset'.
+ComponentSet 'MiscComponents' was renamed and is being reset to 'componentset'.
+pelvis_list
+pelvis_rotation
+134
+Updating Model file from 20303 to latest format...
+Loaded model subject01 from file subject01_simbody.osim
+Couldn't find file 'femur.vtp'.
+Couldn't find file 'tibia.vtp'.
+Couldn't find file 'l_femur.vtp'.
+Couldn't find file 'l_tibia.vtp'.
+ControllerSet 'Controllers' was renamed and is being reset to 'controllerset'.
+ComponentSet 'MiscComponents' was renamed and is being reset to 'componentset'.
+Loaded marker file subject01_synthetic_marker_data.trc (31 markers, 73 frames)
+146
+150
+161
+176
+Updating Model file from 20303 to latest format...
+Loaded model subject01 from file subject01_simbody.osim
+Couldn't find file 'femur.vtp'.
+Couldn't find file 'tibia.vtp'.
+Couldn't find file 'l_femur.vtp'.
+Couldn't find file 'l_tibia.vtp'.
+ControllerSet 'Controllers' was renamed and is being reset to 'controllerset'.
+ComponentSet 'MiscComponents' was renamed and is being reset to 'componentset'.
+Logging files in c:\Realtime Biomechanics\rtosim-master4\data\InverseKinematics\Tulokset_ik_from_file\
+186
+Updating Model file from 20303 to latest format...
+Loaded model subject01 from file subject01_simbody.osim
+Couldn't find file 'femur.vtp'.
+Couldn't find file 'tibia.vtp'.
+Couldn't find file 'l_femur.vtp'.
+Couldn't find file 'l_tibia.vtp'.
+ControllerSet 'Controllers' was renamed and is being reset to 'controllerset'.
+ComponentSet 'MiscComponents' was renamed and is being reset to 'componentset'.
+Logging files in c:\Realtime Biomechanics\rtosim-master4\data\InverseKinematics\Tulokset_ik_from_file\
+196
+203
+214
+224
+229
+Updating Model file from 20303 to latest format...
+Loaded model subject01 from file subject01_simbody.osim
+Couldn't find file 'femur.vtp'.
+Couldn't find file 'tibia.vtp'.
+Couldn't find file 'l_femur.vtp'.
+Couldn't find file 'l_tibia.vtp'.
+ControllerSet 'Controllers' was renamed and is being reset to 'controllerset'.
+ComponentSet 'MiscComponents' was renamed and is being reset to 'componentset'.
+QueueToInverseKinematics::operator begins here
+Updating Model file from 20303 to latest format...
+Loaded model subject01 from file subject01_simbody.osim
+Couldn't find file 'femur.vtp'.
+Couldn't find file 'tibia.vtp'.
+Couldn't find file 'l_femur.vtp'.
+Couldn't find file 'l_tibia.vtp'.
+ControllerSet 'Controllers' was renamed and is being reset to 'controllerset'.
+ComponentSet 'MiscComponents' was renamed and is being reset to 'componentset'.
+Attemptign to join jobCreatorThr
+jobCreatorThr is joinable

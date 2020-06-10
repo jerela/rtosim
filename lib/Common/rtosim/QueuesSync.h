@@ -43,11 +43,17 @@ namespace rtosim {
 
         template<typename... Args>
         void launchThreads(Args&... args) {
-
+            //std::cout << "launchThreads initiated\n";
             auto lst = { std::make_unique<std::thread>(std::ref(args))... };
-            for (auto& l : lst)
-                if (l->joinable())
+            for (auto& l : lst) {
+                //std::cout << "THREAD\n";
+                if (l->joinable()) {
+                    //std::cout << "joining threads\n";
                     l->join();
+                    //std::cout << "joined threads\n";
+                }
+            }
+            //std::cout << "FINISHED QUEUESSYNC.h\n";
         }
     }
 }

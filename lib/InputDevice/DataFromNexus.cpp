@@ -59,7 +59,7 @@ namespace rtosim {
         doneWithExecution_(doneWithExecution),
         runCondition_(runCondition),
         hostName_(hostname),
-        fromNexusToModelLengthConversion_(1.),
+        fromNexusToModelLengthConversion_(0.001),
         lastFrameNumberOfTheLoop_(0),
         previousFrameNumber_(0),
 		emgSubSamples_(0),

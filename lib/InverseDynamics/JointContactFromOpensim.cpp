@@ -65,11 +65,11 @@ namespace rtosim {
 
         idSolver_ = new OpenSim::InverseDynamicsSolver(model_);
 
-        state_ = model_.initSystem();
-        for (auto c : coordinateActuators_)
+        /*state_ = model_.initSystem();
+        for (auto c : coordinateActuators_) COMMENTED BY JERE
             c->overrideForce(state_, true);
         for (auto m : muscleActuators_)
-            m->overrideForce(state_, true);
+            m->overrideForce(state_, true);*/
     }
 
     void JointContactFromOpensim::setTime(double time) {
@@ -135,9 +135,11 @@ namespace rtosim {
         const OpenSim::Joint& joint(model_.getJointSet().get(jointName));
         unsigned idx(model_.getJointSet().getIndex(joint.getName()));
         model_.getSimbodyEngine().transform(state_,
-            model_.getGroundBody(),
+            //model_.getGroundBody(), edited by Jere
+            OpenSim::Ground(),
             rForcesInG.get(idx),
-            joint.getBody(),
+            //joint.getBody(), edited by JEre
+            joint.getParentFrame(),
             forceOnChildInChild);
     }
 
@@ -201,22 +203,22 @@ namespace rtosim {
 
     void JointContactFromOpensim::disableMuscleActuators() {
 
-        for (auto& m : muscleActuators_)
-            m->setDisabled(state_, true);
+        /*for (auto& m : muscleActuators_) COMMENTED BY JERE
+            m->setDisabled(state_, true);*/
     }
 
     void JointContactFromOpensim::enableMuscleActuators() {
 
-        for (auto& m : muscleActuators_)
-            m->setDisabled(state_, false);
+        /*for (auto& m : muscleActuators_) COMMENTED BY JERE
+            m->setDisabled(state_, false);*/
     }
 
     void JointContactFromOpensim::setMuscleForcesToActuators(const SimTK::Vector& muscleForces) {
 
-        for (size_t i(0); i < muscleActuators_.size(); ++i) {
+        /*for (size_t i(0); i < muscleActuators_.size(); ++i) { COMMENTED BY JERE
             muscleActuators_.at(i)->setOverrideForce(state_, true);
             muscleActuators_.at(i)->setOverrideForce(state_, muscleForces[i]);
-        }
+        }*/
     }
 
     void JointContactFromOpensim::calculateReactions() {
@@ -226,10 +228,10 @@ namespace rtosim {
 
     void JointContactFromOpensim::calculateReactions(const SimTK::Vector& residualMobilityForces) {
 
-        for (unsigned i(0); i < nCoordinates_; ++i) {
+        /*for (unsigned i(0); i < nCoordinates_; ++i) { COMMENTED BY JERE
             coordinateActuators_.at(i)->overrideForce(state_, true);
             coordinateActuators_.at(i)->setOverrideForce(state_, residualMobilityForces.get(i));
-        }
+        }*/
         model_.getMultibodySystem().realize(state_, SimTK::Stage::Acceleration);
         model_.getSimbodyEngine().computeReactions(state_, rForcesInG_, rTorquesInG_);
     }

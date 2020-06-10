@@ -1,0 +1,19 @@
+WARNING: times may be wrong on Windows
+time-ik-throughput (thread#13960)
+frames: 73
+wall clock time
+-total:  2.89542
+-sum:    2.89542
+-mean:   0.0396633
+-std:    0.00642941
+-min:    3.2e-06
+-max:    0.0513809
+-median: 0.0390247
+cpu clock time
+-total:  2.896
+-sum:    2.896
+-mean:   0.0396712
+-std:    0.00647028
+-min:    0
+-max:    0.052
+-median: 0.039

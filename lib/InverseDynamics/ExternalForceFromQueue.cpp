@@ -54,7 +54,8 @@ namespace rtosim {
         isSubscribed(false),
         runCondition_(true)
     {
-        ExternalForce::updateFromXMLNode(node);
+        //ExternalForce::updateFromXMLNode(node); edited by Jere
+        ExternalForce::updateFromXMLNode(node, -1);
     }
 
     ExternalForceFromQueue::ExternalForceFromQueue(
@@ -116,7 +117,8 @@ namespace rtosim {
 
             const OpenSim::SimbodyEngine& engine = getModel().getSimbodyEngine();
             SimTK::Vec3 transformedForce, transformedPosition, transformedTorque;
-            engine.transform(state, *forceExpressedInBody_, forceData.getForce(), engine.getGroundBody(), transformedForce);
+            //engine.transform(state, *forceExpressedInBody_, forceData.getForce(), engine.getGroundBody(), transformedForce); edited by Jere
+            engine.transform(state, *forceExpressedInBody_, forceData.getForce(), OpenSim::Ground(), transformedForce);
 
             if (forceData.getUseApplicationPoint()) {
                 //use COP + GRF + fre torque
@@ -125,13 +127,15 @@ namespace rtosim {
             }
             else {
                 //apply the grf and moments from the force plate directly to the body
-                pointExpressedInBody_->getMassCenter(transformedPosition);
+                //pointExpressedInBody_->getMassCenter(transformedPosition); edited by Jere
+                transformedPosition = pointExpressedInBody_->getMassCenter();
                 torquesToApply = forceData.getMoments();
             }
 
             ExternalForce::applyForceToPoint(state, *appliedToBody_, transformedPosition, transformedForce, bodyForces);
 
-            engine.transform(state, *forceExpressedInBody_, torquesToApply, engine.getGroundBody(), transformedTorque);
+            //engine.transform(state, *forceExpressedInBody_, torquesToApply, engine.getGroundBody(), transformedTorque); edited by Jere
+            engine.transform(state, *forceExpressedInBody_, torquesToApply, OpenSim::Ground(), transformedTorque);
             ExternalForce::applyTorque(state, *appliedToBody_, transformedTorque, bodyForces);
         }
     }

@@ -98,6 +98,8 @@ namespace rtosim {
 
     void QueueToInverseKinematics::operator()() {
 
+        std::cout << "QueueToInverseKinematics::operator begins here" << std::endl;
+
         ThreadPoolJobs<MarkerSetFrame> threadPoolJobQueue;
         TimeSequence timeSequenceQueue;
         IKoutputs<rtosim::GeneralisedCoordinatesFrame> ikOutputQueue;
@@ -131,12 +133,19 @@ namespace rtosim {
 
         internalDoneWithSubscriptions.wait();
         doneWithSubscriptions_.wait();
-        std::cout << "starting IK" << std::endl;
+
+        std::cout << "Attempting to join jobCreatorThr" << std::endl;
 
         jobCreatorThr.join();
+        
+        std::cout << "Attempting to join ikSequencerThr" << std::endl;
+        
         ikSequencerThr.join();
+        
+        std::cout << "Joining ik solver threads" << std::endl;
         for (auto& it : ikSolversThrs)
             it.join();
+
 
         outputGeneralisedCoordinateQueue_.push(rtosim::EndOfData::get<rtosim::GeneralisedCoordinatesFrame>());
         //      std::cout << "IKFromQueue waiting\n";
@@ -144,5 +153,7 @@ namespace rtosim {
 
         for (auto& it : ikSolvers)
             stopWatch_.push_back(it->getProcessingTimes());
+        std::cout << "All done in QueueToInverseKinematics" << std::endl;
     }
+    
 }

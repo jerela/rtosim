@@ -18,11 +18,11 @@ void checkStorageAgainstStandard(
 	std::string testFile, int testFileLine, 
 	std::string errorMessage)
 {
-	OpenSim::Array<std::string> columnsUsed;
-	OpenSim::Array<double> comparisons;
+	std::vector<std::string> columnsUsed;
+	std::vector<double> comparisons;
 	result.compareWithStandard(standard, columnsUsed, comparisons);
 
-	int columns = columnsUsed.getSize();
+	int columns = columnsUsed.size();
 
 	assert_(columns > 0, testFile, testFileLine, errorMessage + "- no common columns to compare!");
 
@@ -45,13 +45,16 @@ std::string runRtosimInverseKinematics(std::string dataDir,std::string ikSetupFi
 	double accuracy = ikt.getPropertyByName("accuracy").getValue<double>();
 	double constraintWeight = ikt.getPropertyByName("constraint_weight").getValue<SimTK::Real>();
 	// Create the data queues
+	std::cout << "Creating data queues\n";
 	rtosim::MarkerSetQueue markerSetQueue;
 	rtosim::GeneralisedCoordinatesQueue generalisedCoordinatesQueue;
 
 	//Create the synchronisation latches
+	std::cout << "Creating synchronisation latches\n";
 	rtb::Concurrency::Latch doneWithSubscription, doneWithExecution;
 
 	//Read the data from a trc file and move it to the appropriate `Queue`
+	std::cout << "Reading data from .trc and moving it to the appropriate queue\n";
 	rtosim::MarkersFromTrc markerDataProducer(
 		markerSetQueue,
 		doneWithSubscription,
@@ -61,6 +64,7 @@ std::string runRtosimInverseKinematics(std::string dataDir,std::string ikSetupFi
 		false);
 
 	//Read the data from `markerSetQueue` and solves inverse kinematics
+	std::cout << "Reading data from markerSetQueue and queueing IK\n";
 	rtosim::QueueToInverseKinematics ik(
 		markerSetQueue,
 		generalisedCoordinatesQueue,
@@ -73,6 +77,7 @@ std::string runRtosimInverseKinematics(std::string dataDir,std::string ikSetupFi
 		constraintWeight);
 
 	// Save the data to file
+	std::cout << "Saving data to file\n";
 	std::string outputFilename("rtosim_ik_j" + std::to_string(nThreads));
 	std::vector<std::string> columnLabels = rtosim::getCoordinateNamesFromModel(modelFilename);
 	rtosim::QueueToFileLogger<rtosim::GeneralisedCoordinatesData> coordinateLogger(
@@ -85,7 +90,9 @@ std::string runRtosimInverseKinematics(std::string dataDir,std::string ikSetupFi
 	doneWithSubscription.setCount(3);
 	doneWithExecution.setCount(3);
 
+	std::cout << "Launching threads\n";
 	rtosim::QueuesSync::launchThreads(markerDataProducer, ik, coordinateLogger);
+	std::cout << "RTOSIM IK done\n";
 	return outputFilename + ".mot";
 }
 
@@ -95,6 +102,7 @@ int main() {
 		for (unsigned j(1); j < 10; ++j) {
 			// RTOSIM vs standard
 			std::string dataDir = std::string(BASE_DIR) + "/data/InverseKinematics/";
+			std::cout << "Running rtosim IK\n";
 			std::string rtosimResultsFilename = runRtosimInverseKinematics(dataDir, "subject01_Setup_InverseKinematics.xml", j);
 			OpenSim::Storage rtosimResults(dataDir + rtosimResultsFilename);
 			OpenSim::Storage standard(dataDir + "std_subject01_walk1_ik.mot");

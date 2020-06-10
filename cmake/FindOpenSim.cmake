@@ -159,27 +159,47 @@ find_path(OPENSIM_INCLUDE_DIR
     DOC ${OPENSIM_INCLUDE_DIR_DOC}
     )
 
+#find_path(OPENSIMSIMBODY_INCLUDE_DIR
+#    NAMES "include/Simbody.h"
+#    HINTS ${OPENSIM_SEARCH_PATHS}
+#    PATH_SUFFIXES "sdk/Simbody" "opensim/sdk/Simbody"
+#    DOC ${OPENSIMSIMBODY_INCLUDE_DIR_DOC}
+#    )
+
+set(OPENSIMSIMBODY_INCLUDE_DIR
+		${OPENSIM_INCLUDE_DIR}
+#        ${OPENSIM_INSTALL_DIR}/sdk/Simbody/lib
+        ${OPENSIM_INSTALL_DIR}/sdk/Simbody/include
+		${OPENSIM_INSTALL_DIR}/sdk/include/OpenSim
+        )
+
 # This change is necessary for Simbody 3.4 and beyond, and is incompatible
 # with Simbody 3.3 and below.
 #set(OPENSIM_SIMBODY_INCLUDE_RELPATH "include")
 
 # I found that OpenSim 3.3 source installs files in a "simbody" subdir instead of "include"
 # Let's check both
-if(EXISTS "${OPENSIM_INCLUDE_DIR}/SimTK/include" AND IS_DIRECTORY "${OPENSIM_INCLUDE_DIR}/SimTK/include")
-    set(OPENSIMSIMBODY_INCLUDE_DIR
-        ${OPENSIM_INCLUDE_DIR}
-        ${OPENSIM_INCLUDE_DIR}/SimTK/include
-        )
-elseif(EXISTS "${OPENSIM_INCLUDE_DIR}/SimTK/simbody" AND IS_DIRECTORY "${OPENSIM_INCLUDE_DIR}/SimTK/simbody")
-    set(OPENSIMSIMBODY_INCLUDE_DIR
-        ${OPENSIM_INCLUDE_DIR}
-        ${OPENSIM_INCLUDE_DIR}/SimTK/simbody
-        )
-else()
-    set(OPENSIMSIMBODY_INCLUDE_DIR
-        ${OPENSIM_INCLUDE_DIR}
-       )
-endif()
+#if(EXISTS "${OPENSIM_INCLUDE_DIR}/SimTK/include" AND IS_DIRECTORY "${OPENSIM_INCLUDE_DIR}/SimTK/include")
+#    set(OPENSIMSIMBODY_INCLUDE_DIR
+#        ${OPENSIM_INCLUDE_DIR}
+#        ${OPENSIM_INCLUDE_DIR}/SimTK/include
+#        )
+#elseif(EXISTS "${OPENSIM_INCLUDE_DIR}/SimTK/simbody" AND IS_DIRECTORY "${OPENSIM_INCLUDE_DIR}/SimTK/simbody")
+#    set(OPENSIMSIMBODY_INCLUDE_DIR
+#        ${OPENSIM_INCLUDE_DIR}
+#        ${OPENSIM_INCLUDE_DIR}/SimTK/simbody
+#        )
+# the following elseif added by Jere
+#elseif(EXISTS "${OPENSIM_INCLUDE_DIR}/sdk/Simbody/include" AND IS_DIRECTORY "${OPENSIM_INCLUDE_DIR}/sdk/Simbody/include")
+#	set(OPENSIMSIMBODY_INCLUDE_DIR
+#        ${OPENSIM_INCLUDE_DIR}
+#        ${OPENSIM_INCLUDE_DIR}/sdk/Simbody/include
+#        )
+#else()
+#    set(OPENSIMSIMBODY_INCLUDE_DIR
+#        ${OPENSIM_INCLUDE_DIR}
+#       )
+#endif()
 
 
 # OPENSIM_ROOT_DIR
@@ -237,7 +257,8 @@ set(OPENSIMSIMBODY_LIBRARY ${OPENSIM_LIBRARY})
 
 foreach(LIB_NAME IN LISTS SIMBODY_LIBRARY_LIST)
     find_library(FOUND_LIB NAMES ${LIB_NAME}
-        PATHS "${OPENSIM_LIB_DIR}"
+#        PATHS "${OPENSIM_LIB_DIR}"
+		PATHS "${OPENSIM_LIB_DIR}" "${OPENSIM_INSTALL_DIR}/sdk/Simbody/lib"
         NO_DEFAULT_PATH)
     if(FOUND_LIB)
         list(APPEND OPENSIMSIMBODY_LIBRARY optimized ${FOUND_LIB})
@@ -245,7 +266,8 @@ foreach(LIB_NAME IN LISTS SIMBODY_LIBRARY_LIST)
     unset(FOUND_LIB CACHE)
 
     find_library(FOUND_LIB NAMES ${LIB_NAME}_d
-        PATHS "${OPENSIM_LIB_DIR}"
+#        PATHS "${OPENSIM_LIB_DIR}"
+		PATHS "${OPENSIM_LIB_DIR}" "${OPENSIM_INSTALL_DIR}/sdk/Simbody/lib"
         NO_DEFAULT_PATH)
     if(FOUND_LIB)
         list(APPEND OPENSIMSIMBODY_LIBRARY debug ${FOUND_LIB})

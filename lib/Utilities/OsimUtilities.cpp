@@ -44,7 +44,8 @@ namespace rtosim {
         auto markerSet(model.getMarkerSet());
         std::vector<std::string> markers;
         for (unsigned i(0); i < static_cast<unsigned>(markerSet.getSize()); ++i) {
-            if (markerSet.get(i).getBodyName() == body.getName())
+            //if (markerSet.get(i).getBodyName() == body.getName()) edited by Jere
+            if (markerSet.get(i).getParentFrameName() == body.getName())
                 markers.emplace_back(markerSet.get(i).getName());
         }
 
@@ -56,7 +57,8 @@ namespace rtosim {
         std::vector<double> x;
         for (auto& m : markerNames) {
 
-            x.push_back(model.getMarkerSet().get(m).getOffset()[0]);
+            //x.push_back(model.getMarkerSet().get(m).getOffset()[0]); edited by Jere
+            x.push_back(model.getMarkerSet().get(m).get_location()[0]);
         }
         auto it(std::min_element(x.begin(), x.end()));
         return markerNames.at(std::distance(x.begin(), it));
